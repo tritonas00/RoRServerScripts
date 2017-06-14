@@ -1274,11 +1274,11 @@ class terrainEditor
 			else if(emsg[1]=="FRAMESTEP")
 				clients[pos].enabled = false;
 
-			server.log("ERROR| "+emsg[2]);
+			server.Log("ERROR| "+emsg[2]);
 		}
 		else
 		{
-			server.log("WARN| Unhandled game command message!");
+			server.Log("WARN| Unhandled game command message!");
 		}
 	}
 

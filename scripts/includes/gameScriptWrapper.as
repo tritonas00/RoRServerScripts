@@ -1,8 +1,8 @@
 #include "utils"
 
 #if DEBUG
-#include "logger.as"
-logger gameScriptDebugLog("log_gameScript_"+server.getTime()+".asdata");
+#include "Logger.as"
+Logger gameScriptDebugLog("Log_gameScript_"+server.getTime()+".asdata");
 #endif
 
 void quickGameMessage(int uid, const string &in msg, const string &in icon)
@@ -80,7 +80,7 @@ class gameScript
 				server.cmd(_uid, cmd[i]);
 #if DEBUG
 				// Log this
-				gameScriptDebugLog.log("S>"+((_uid==-1) ? " ALL" : formatInt(_uid, "", 4))+"| "+cmd[i]);
+				gameScriptDebugLog.Log("S>"+((_uid==-1) ? " ALL" : formatInt(_uid, "", 4))+"| "+cmd[i]);
 #endif
 			}
 		}
@@ -103,7 +103,7 @@ class gameScript
 	{
 		if(cmd_in.length()>4000)
 		{
-			server.log("Script exception in gameScript::addCmd(...): Trying to add a cmd of length "+cmd_in.length()+" while maximum allowed is 4000.");
+			server.Log("Script exception in gameScript::addCmd(...): Trying to add a cmd of length "+cmd_in.length()+" while maximum allowed is 4000.");
 			return;
 		}
 		
@@ -119,7 +119,7 @@ class gameScript
 	{
 		if(cmd_in.length()>4000)
 		{
-			server.log("Script exception in gameScript::addCmd(...): Trying to add a cmd of length "+cmd_in.length()+" while maximum allowed is 4000.");
+			server.Log("Script exception in gameScript::addCmd(...): Trying to add a cmd of length "+cmd_in.length()+" while maximum allowed is 4000.");
 			return;
 		}
 		
@@ -156,10 +156,10 @@ class gameScript
 	}
 	
 	// Game script wrapper
-	void log(string &in text)
+	void Log(string &in text)
 	{
 		text = stringReplace(text, "'", "\\'");
-		addCmd("log('"+text+"');");
+		addCmd("Log('"+text+"');");
 	}
 
 	void setPersonPosition(const vector3 &in vec)
@@ -205,8 +205,8 @@ class gameScript
 	
 	void flashMessage(string &in text, const float &in time, const float &in charHeight)
 	{
-		// log message
-		server.log("MSG|S>"+((uid==-1) ? " ALL" : formatInt(uid, " ", 4))+"| "+text);
+		// Log message
+		server.Log("MSG|S>"+((uid==-1) ? " ALL" : formatInt(uid, " ", 4))+"| "+text);
 
 		text = stringReplace(text, "'", "\\'");
 		addCmd("game.flashMessage('"+text+"', "+floatToString(time)+", "+floatToString(charHeight)+");");
@@ -326,8 +326,8 @@ class gameScript
 	
 	void message(string &in text, string &in icon, const float &in msTime = 30000.0f, const bool &in forceVisible = true)
 	{
-		// log message
-		server.log("MSG|S>"+((uid==-1) ? " ALL" : formatInt(uid, " ", 4))+"| "+text);
+		// Log message
+		server.Log("MSG|S>"+((uid==-1) ? " ALL" : formatInt(uid, " ", 4))+"| "+text);
 
 		text = stringReplace(text, "'", "\\'");
 		icon = stringReplace(icon, "'", "\\'");
@@ -637,7 +637,7 @@ class gameScriptManager
 	void gameCmd(int uid, const string &in msg)
 	{
 #if DEBUG
-		server.log("GAMECMD| "+msg);
+		server.Log("GAMECMD| "+msg);
 #endif
 		if(msg.length>6 && msg[0]==gameCmdHeader_0 && msg[1]==gameCmdHeader_1 && msg[2]==gameCmdHeader_2 && msg[5]==gameCmdHeader_5)
 		{
@@ -650,7 +650,7 @@ class gameScriptManager
 			}
 			else if(callbackNum<0)
 			{
-				server.log("Unhandled special gameCmd number "+callbackNum+" from "+uid+": "+msg);
+				server.Log("Unhandled special gameCmd number "+callbackNum+" from "+uid+": "+msg);
 			}
 			else
 			{
@@ -710,13 +710,13 @@ class gameScriptManager
 
 				if(lines[i].length()==0)
 				{
-					if(debug) server.log("Skipping line "+(k+i+1)+": empty line.");
+					if(debug) server.Log("Skipping line "+(k+i+1)+": empty line.");
 					continue;
 				}
 
 				if(lines[i][0]==semicolon || lines[i][0]==slash)
 				{
-					if(debug) server.log("Skipping line "+(k+i+1)+": comment.");
+					if(debug) server.Log("Skipping line "+(k+i+1)+": comment.");
 					continue;
 				}
 			
@@ -724,7 +724,7 @@ class gameScriptManager
 
 				if(parts.length()<7)
 				{
-					if(debug) server.log("Skipping line "+(k+i+1)+": syntax error: not enough commas.");
+					if(debug) server.Log("Skipping line "+(k+i+1)+": syntax error: not enough commas.");
 					continue;
 				}
 
@@ -732,13 +732,13 @@ class gameScriptManager
 
 				if(args.length()<1)
 				{
-					if(debug) server.log("Skipping line "+(k+i+1)+": syntax error: no object specified.");
+					if(debug) server.Log("Skipping line "+(k+i+1)+": syntax error: no object specified.");
 					continue;
 				}
 			
 				if(args[0]=="truck" || parts[0]=="truck2" || parts[0]=="load")
 				{
-					if(debug) server.log("Skipping line "+(k+i+1)+": Cannot spawn trucks or loads in multiplayer.");
+					if(debug) server.Log("Skipping line "+(k+i+1)+": Cannot spawn trucks or loads in multiplayer.");
 					continue;
 				}
 
@@ -837,7 +837,7 @@ class gameScriptManager
 		}
 		
 		// Or create it if it doesn't exist
-		server.log("INFO| gameScriptManager: Creating new section: '"+name+"'.");
+		server.Log("INFO| gameScriptManager: Creating new section: '"+name+"'.");
 		const int index = sectionCount;
 		sections.resize(++sectionCount);
 		sections[index].slotnum  = index;
@@ -951,7 +951,7 @@ class terrainFileLoader
 			{
 				if(parseInt(tmp.substr(19))!=1)
 				{
-					server.log("ERROR| terrainFileLoader: The terrain file '"+filename+"' is made in a unsupported syntax version. (Supported version=1, fileversion="+tmp.substr(19)+".");
+					server.Log("ERROR| terrainFileLoader: The terrain file '"+filename+"' is made in a unsupported syntax version. (Supported version=1, fileversion="+tmp.substr(19)+".");
 					f.close();
 					return;
 				}
@@ -983,13 +983,13 @@ class terrainFileLoader
 					if(tmp[0]==slash)
 					{
 						// Why 2 comment styles?
-						//server.log("WARNING| terrainFileLoader: Found '/' comment in '"+filename+"'  at line "+lineNum+". It's recommended to use ';' comments instead.");
+						//server.Log("WARNING| terrainFileLoader: Found '/' comment in '"+filename+"'  at line "+lineNum+". It's recommended to use ';' comments instead.");
 						continue;
 					}
 					if(tmp.substr(0,11) == "END_SECTION")
 					{
 						if(section!=trim(tmp.substr(12)))
-							server.log("WARNING| terrainFileLoader: Ending section '"+trim(tmp.substr(12))+"', which was never opened. File: '"+filename+"' ("+lineNum+"). Current section: '"+section+"'.");
+							server.Log("WARNING| terrainFileLoader: Ending section '"+trim(tmp.substr(12))+"', which was never opened. File: '"+filename+"' ("+lineNum+"). Current section: '"+section+"'.");
 						
 						// end the main section = stop parsing
 						if(section=="MAIN")
@@ -1014,7 +1014,7 @@ class terrainFileLoader
 						}
 						else
 						{
-							server.log("WARNING| terrainFileLoader: Syntax error in file '"+filename+"' ("+lineNum+"): Unknown keyword for section '"+section+"'.");
+							server.Log("WARNING| terrainFileLoader: Syntax error in file '"+filename+"' ("+lineNum+"): Unknown keyword for section '"+section+"'.");
 						}
 						continue;
 					}
@@ -1035,7 +1035,7 @@ class terrainFileLoader
 						else if(tmp.substr(0, 9)=="SKYCOLOUR") {}
 						else
 						{
-							server.log("WARNING| terrainFileLoader: Syntax error in file '"+filename+"' ("+lineNum+"): Unknown keyword for section '"+section+"'.");
+							server.Log("WARNING| terrainFileLoader: Syntax error in file '"+filename+"' ("+lineNum+"): Unknown keyword for section '"+section+"'.");
 						}
 						continue;
 					}
@@ -1045,7 +1045,7 @@ class terrainFileLoader
 						array<string>@ res = tmp.substr(tmp.findFirst(" ")).split(",");
 						if(res.length()!=3)
 						{
-							server.log("WARNING| terrainFileLoader: Syntax error in file '"+filename+"' ("+lineNum+").");
+							server.Log("WARNING| terrainFileLoader: Syntax error in file '"+filename+"' ("+lineNum+").");
 						}
 						else if(tmp.substr(0,5)=="TRUCK")
 						{
@@ -1063,7 +1063,7 @@ class terrainFileLoader
 						}
 						else
 						{
-							server.log("WARNING| terrainFileLoader: Syntax error in file '"+filename+"' ("+lineNum+"): Unknown keyword for section '"+section+"'.");
+							server.Log("WARNING| terrainFileLoader: Syntax error in file '"+filename+"' ("+lineNum+"): Unknown keyword for section '"+section+"'.");
 						}
 						continue;
 					}
@@ -1073,17 +1073,17 @@ class terrainFileLoader
 						continue;
 					}
 
-					server.log("WARNING| terrainFileLoader: Syntax error in file '"+filename+"' ("+lineNum+"): Unknown keyword or keyword in wrong section ('"+section+"').");
+					server.Log("WARNING| terrainFileLoader: Syntax error in file '"+filename+"' ("+lineNum+"): Unknown keyword or keyword in wrong section ('"+section+"').");
 				}
 
 				// Normally, we should be in the main section now. Otherwise, an END_SECTION was missing.
 				if(section!="MAIN")
-					server.log("WARNING| terrainFileLoader: Syntax error in file '"+filename+"' ("+lineNum+"): Missing 'END_SECTION "+section+"'.");
+					server.Log("WARNING| terrainFileLoader: Syntax error in file '"+filename+"' ("+lineNum+"): Missing 'END_SECTION "+section+"'.");
 
 				// For our purposes, we need it to have an objects section
 				if(fileContents=="")
 				{
-					server.log("ERROR| terrainFileLoader: Missing 'OBJECTS' section.");
+					server.Log("ERROR| terrainFileLoader: Missing 'OBJECTS' section.");
 					f.close();
 					return;
 				}
@@ -1100,7 +1100,7 @@ class terrainFileLoader
 				len += f.readLine(tmp);
 				if(tmp.length()==0)
 				{
-					server.log("ERROR| terrainFileLoader: Syntax error in file '"+filename+"'.");
+					server.Log("ERROR| terrainFileLoader: Syntax error in file '"+filename+"'.");
 					f.close();
 					return;
 				}
@@ -1110,7 +1110,7 @@ class terrainFileLoader
 				}
 				if(tmp.length()<6)
 				{
-					server.log("ERROR| terrainFileLoader: Syntax error in file '"+filename+"'.");
+					server.Log("ERROR| terrainFileLoader: Syntax error in file '"+filename+"'.");
 					f.close();
 					return;
 				}
@@ -1124,7 +1124,7 @@ class terrainFileLoader
 				array<string>@ res = tmp.split(",");
 				if(res.length()<6)
 				{
-					server.log("ERROR| terrainFileLoader: Syntax error in file '"+filename+"'.");
+					server.Log("ERROR| terrainFileLoader: Syntax error in file '"+filename+"'.");
 					f.close();
 					return;
 				}
@@ -1148,7 +1148,7 @@ class terrainFileLoader
 		}
 		else
 		{
-			server.log("ERROR| terrainFileLoader: File '"+filename+"' does not exist.");
+			server.Log("ERROR| terrainFileLoader: File '"+filename+"' does not exist.");
 			return;
 		}		
 		

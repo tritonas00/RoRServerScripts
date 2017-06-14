@@ -111,7 +111,7 @@ void customCommand_loadTerrain(chatMessage@)   { terrain.load();   }
 // Our main function (never remove this, even when it does nothing useful!)
 void main()
 {
-	server.log("The script file is working :D");
+	server.Log("The script file is working :D");
 	autoModerator.disableFloodFilter();
 	server.setCallback("playerAdded", "authWarning_playerAdded", null);
 }

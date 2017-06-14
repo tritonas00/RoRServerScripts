@@ -241,7 +241,7 @@ class chatManager
 		// Do some basic check before possibly overwriting a command
 		if(commandList.exists(cmd))
 		{
-			server.log("WARNING| chatManager::addCommand(...): Overwriting command '"+cmd+"'.");
+			server.Log("WARNING| chatManager::addCommand(...): Overwriting command '"+cmd+"'.");
 			removeCommand(cmd);
 		}
 
@@ -373,7 +373,7 @@ class chatPlugin_autoModerator_client
 }
 
 const uint PROFANITYFILTER_CHATBANTIME = 60;
-const uint PROFANITYFILTER_LOGSIZE = 3;
+const uint PROFANITYFILTER_LogSIZE = 3;
 
 class chatPlugin_autoModerator
 {
@@ -396,8 +396,8 @@ class chatPlugin_autoModerator
 
 		// Initialize profanity filter
 		profanityFilterLogIndex = 0;
-		profanityFilterLog.resize(PROFANITYFILTER_LOGSIZE);
-		for(uint i=0; i<PROFANITYFILTER_LOGSIZE; ++i)
+		profanityFilterLog.resize(PROFANITYFILTER_LogSIZE);
+		for(uint i=0; i<PROFANITYFILTER_LogSIZE; ++i)
 		{
 			profanityFilterLog[i] = i-9999;
 		}
@@ -599,17 +599,17 @@ class chatPlugin_autoModerator
 				{
 					cmsg.broadcast.block();
 					cmsg.privateGameCommand.message("Your message was censored by the server.", "lock_delete.png", 30000.0f, true);
-					server.log("CHAT_BLOCK| "+server.getUserName(cmsg.uid)+": "+newMsg);
+					server.Log("CHAT_BLOCK| "+server.getUserName(cmsg.uid)+": "+newMsg);
 				}
 				else
 				{
 					// Set the new (censored) message.
 					cmsg.msg = newMsg;
-					server.log("CHAT| "+server.getUserName(cmsg.uid)+": "+newMsg);
+					server.Log("CHAT| "+server.getUserName(cmsg.uid)+": "+newMsg);
 				
-					// log this event
+					// Log this event
 					profanityFilterLog[profanityFilterLogIndex] = cmsg.uid;
-					profanityFilterLogIndex = (profanityFilterLogIndex+1)%PROFANITYFILTER_LOGSIZE;
+					profanityFilterLogIndex = (profanityFilterLogIndex+1)%PROFANITYFILTER_LogSIZE;
 
 					// Time for a sanction against this user?
 					bool allBySameUser = true;
@@ -624,12 +624,12 @@ class chatPlugin_autoModerator
 					if(allBySameUser)
 					{	
 						// Give him a chat ban
-						cmsg.privateGameCommand += giveChatBan(cmsg.uid, PROFANITYFILTER_CHATBANTIME, "Auto-ban after " + PROFANITYFILTER_LOGSIZE + " subsequent censored messages.");
+						cmsg.privateGameCommand += giveChatBan(cmsg.uid, PROFANITYFILTER_CHATBANTIME, "Auto-ban after " + PROFANITYFILTER_LogSIZE + " subsequent censored messages.");
 						cmsg.generalGameCommand.message("User '"+server.getUserName(cmsg.uid)+"'s chat permission has been automatically revoked.", "server_error.png", 30000.0f, true);
 						
 						// reset variables
 						profanityFilterLogIndex = 0;
-						for(uint i=0; i<PROFANITYFILTER_LOGSIZE; ++i)
+						for(uint i=0; i<PROFANITYFILTER_LogSIZE; ++i)
 						{
 							profanityFilterLog[i] = i-9999;
 						}
@@ -1094,7 +1094,7 @@ void chatPlugin_disallowAllUpperCase_chatCallback(chatMessage@ cmsg)
 		if(isUpperCase(cmsg.msg))
 		{
 			// Log it for debug purposes
-			// server.log("Uppercase detected: '" + cmsg.msg + "'.");
+			// server.Log("Uppercase detected: '" + cmsg.msg + "'.");
 		
 			// Convert the message to lower case
 			cmsg.msg = stringToLowerCase(cmsg.msg);
@@ -1319,7 +1319,7 @@ class chatPlugin_gotoCommand
 		useStorage = true;
 		if(storage.fileExists() && storage.getDescription().substr(0,22)!="CHATPLUGIN_GOTOCOMMAND")
 		{
-			server.log("chatPlugin_gotoCommand::chatPlugin_gotoCommand exception: File '"+storage.getFilename()+"' already exists. Please delete this file first.");
+			server.Log("chatPlugin_gotoCommand::chatPlugin_gotoCommand exception: File '"+storage.getFilename()+"' already exists. Please delete this file first.");
 			useStorage = false;
 		}
 		if(storage.fileExists() && !storage.loadSuccessful())
@@ -1589,7 +1589,7 @@ class chatPlugin_gotoCommand
 		storage.set(terrain+"_rotations", join(rotations, ";"));
 
 		if(!storage.save())
-			server.log("ERROR| chatPlugin_gotoCommand::save(): Saving failed.");
+			server.Log("ERROR| chatPlugin_gotoCommand::save(): Saving failed.");
 	}
 
 	void load()
@@ -1626,7 +1626,7 @@ class chatPlugin_gotoCommand
 			locations.resize(0);
 			positions.resize(0);
 			rotations.resize(0);
-			server.log("chatPlugin_gotoCommand exception: The storage file did not meet expectations.");
+			server.Log("chatPlugin_gotoCommand exception: The storage file did not meet expectations.");
 		}
 
 		free_pos = locations.length();
@@ -1719,7 +1719,7 @@ class chatPlugin_terrainList
 		
 		if(server.getServerTerrain()!="any")
 		{
-			server.log("INFO| 'chatPlugin_terrainList' is disabled because the server has a fixed terrain.");
+			server.Log("INFO| 'chatPlugin_terrainList' is disabled because the server has a fixed terrain.");
 			destroyed = true;
 			return;
 		}
@@ -1930,7 +1930,7 @@ class chatPlugin_terrainList
 //////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////
 
-const uint PING_LOGSIZE   = 15; //!< How many ping results that we store and calculate the average of.
+const uint PING_LogSIZE   = 15; //!< How many ping results that we store and calculate the average of.
 const uint PING_FREQUENCY = 3; //!< How many times a minute do we ping clients?
 
 void chatPlugin_ping_cmdCallback(chatMessage@ ccmsg)
@@ -1963,7 +1963,7 @@ class chatPlugin_ping_client
 {
 	int uid;
 	
-	array<chatPlugin_ping_result@> log;
+	array<chatPlugin_ping_result@> Log;
 	uint index;
 }
 		
@@ -2048,7 +2048,7 @@ class chatPlugin_ping
 		chatPlugin_ping_client cl;
 		cl.uid = uid;
 		cl.index = 0;
-		cl.log.resize(PING_LOGSIZE);
+		cl.Log.resize(PING_LogSIZE);
 		clients.insertLast(@cl);
 		
 		if(!frameStepRegistered && clients.length()==1)
@@ -2123,10 +2123,10 @@ class chatPlugin_ping
 		
 		// Accumulate all the ping results that we have available for this user
 		array<float> pingList;
-		for(uint i=0; i<PING_LOGSIZE; ++i)
+		for(uint i=0; i<PING_LogSIZE; ++i)
 		{
-			if(clients[pos].log[i] !is null)
-				pingList.insertLast(clients[pos].log[i].ping);
+			if(clients[pos].Log[i] !is null)
+				pingList.insertLast(clients[pos].Log[i].ping);
 		}
 		pingList.sortAsc();
 		
@@ -2155,11 +2155,11 @@ class chatPlugin_ping
 		
 		// Get the index where we need to insert the ping into
 		clients[pos].index++;
-		if(clients[pos].index>=PING_LOGSIZE)
+		if(clients[pos].index>=PING_LogSIZE)
 			clients[pos].index = 0;
 		
 		// And add the ping
-		@clients[pos].log[clients[pos].index] = @res;
+		@clients[pos].Log[clients[pos].index] = @res;
 	}
 
 	float getPing(int uid)
@@ -2170,11 +2170,11 @@ class chatPlugin_ping
 		// Accumulate all the ping results that we have available for this user
 		float ping = 0.0f;
 		int pingCount = 0;
-		for(uint i=0; i<PING_LOGSIZE; ++i)
+		for(uint i=0; i<PING_LogSIZE; ++i)
 		{
-			if(clients[pos].log[i] !is null)
+			if(clients[pos].Log[i] !is null)
 			{
-				ping += clients[pos].log[i].ping;
+				ping += clients[pos].Log[i].ping;
 				++pingCount;
 			}
 		}

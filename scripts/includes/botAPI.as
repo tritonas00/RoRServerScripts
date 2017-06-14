@@ -22,7 +22,7 @@ void gameCmd(int uid, string message)
 					
 				string msg = stringReplace(parts[1], '"', '\\"');
 				server.cmd(TO_ALL, "game.message(\"" + msg + "\", \"user_comment.png\", 30000.0f, true);");
-				server.log("CHAT| " + msg);
+				server.Log("CHAT| " + msg);
 				server.cmd(uid, 'botapi.SAY_COMMENT("ok");');
 
 			}

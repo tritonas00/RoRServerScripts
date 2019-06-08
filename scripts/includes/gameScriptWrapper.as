@@ -414,16 +414,6 @@ class gameScriptManager_argument
 	string msg;
 }
 
-bool gameScriptManager_condition_v39OrLater(int uid, any@ arg)
-{
-	return (server.getUserVersion(uid).findFirst("0.38")<0);
-}
-
-bool gameScriptManager_condition_v38Only(int uid, any@ arg)
-{
-	return (server.getUserVersion(uid).findFirst("0.38")>=0);
-}
-
 funcdef void GAMESCRIPTMANAGER_CALLBACK(gameScriptManager_argument@);
 funcdef bool GAMESCRIPTMANAGER_CONDITION(int, any@);
 bool gameScriptManager_positiveCondition(int, any@) { return true; }
@@ -433,8 +423,6 @@ class gameScriptManager
 	array<gameScriptManager_section> sections;
 	uint sectionCount;
 	bool destroyed;
-	uint defaultSection38;
-	uint defaultSection39;
 	array<gameScriptManager_callback@> gameCmdCallbackList;
 	string frameStepContents;
 
@@ -460,124 +448,6 @@ class gameScriptManager
 		server.setCallback("playerAdded", "playerAdded", @this);
 		server.setCallback("gameCmd",     "gameCmd",     @this);
 
-		// Add default section
-		defaultSection39 = getSectionByName("DEFAULT SCRIPT BASICS v39");
-		
-		// This default section is for 0.39 only
-		addSectionCondition("DEFAULT SCRIPT BASICS v39", gameScriptManager_condition_v39OrLater, null);
-		
-		// Add the event callback function
-		eventCallbackNum = -1;
-		sections[defaultSection39].cmd.registerForEvent(SE_ALL_EVENTS);
-		sections[defaultSection39].cmd.addScriptVariable("dictionary lastServerContact;");
-		sections[defaultSection39].cmd.addScriptVariable("int clientVersion;");
-		sections[defaultSection39].cmd.splitCommandHere();
-		sections[defaultSection39].cmd.addCmd("clientVersion = 39;");
-		sections[defaultSection39].cmd.addScriptFunction(
-			"void eventCallback(int eventnum, int value)"
-			"{"
-			"	float lastTime = 0.0f;"
-			"	float currTime = game.getTime();"
-			"	if(!lastServerContact.get('eventnum__'+eventnum, lastTime) || (currTime-lastTime)>1.0f)"
-			"	{"
-			"		lastServerContact.set('eventnum__'+eventnum, currTime);"
-			"		"
-			"		string argument = '';"
-			"		if(eventnum==SE_TRUCK_ENTER || eventnum==SE_TRUCK_EXIT)"
-			"		{"
-			"			if(value>=0)"
-			"			{"
-			"				BeamClass @truck = @game.getTruckByNum(value);"
-			"				if(truck !is null)"
-			"					argument = truck.getTruckName();"
-			"				else"
-			"					argument = 'error';"
-			"			}"
-			"			else"
-			"				argument = 'avatar';"
-			"		}"
-			"		"
-			"		game.sendGameCmd('#GS"+formatInt(eventCallbackNum, "0", 2)+"#'+currTime+'$'+eventnum+'$'+value+'$'+argument);"
-			"	}"
-			"}"
-		);
-		sections[defaultSection39].cmd.addScriptFunction("""
-			string formatFloat(const float &in myFloat, const string &in, const int &in, const int &in)
-			{
-				string f = ""+myFloat;
-				
-				// search if a point is present in the string
-				const string point = ".";
-				const uint8 point_ord = point[0];
-				bool point_present = false;
-				for(int i=f.length()-1; i>=0; --i)
-				{
-					if(f[i]==point_ord)
-					{
-						point_present = true;
-						break;
-					}
-				}
-				
-				// if no point is present, add it
-				if(point_present)
-					return f;
-				else
-					return f+".0";
-			}
-		""");
-		sections[defaultSection39].cmd.addScriptFunction("""
-			bool sendGameCmd(const string &in cmd)
-			{
-				game.sendGameCmd(cmd);
-				return true;
-			}
-		""");
-		
-		
-
-		// Add default section
-		defaultSection38 = getSectionByName("DEFAULT SCRIPT BASICS v38");
-		
-		// This default section is for 0.38 only
-		addSectionCondition("DEFAULT SCRIPT BASICS v38", gameScriptManager_condition_v38Only, null);
-		
-		sections[defaultSection38].cmd.addScriptVariable("dictionary lastServerContact;");
-		sections[defaultSection38].cmd.addScriptVariable("int clientVersion;");
-		sections[defaultSection38].cmd.splitCommandHere();
-		sections[defaultSection38].cmd.addCmd("clientVersion = 38;");
-		sections[defaultSection38].cmd.addScriptFunction("""
-			bool sendGameCmd(const string &in cmd)
-			{
-				return false;
-			}
-		""");
-		sections[defaultSection38].cmd.addScriptFunction("""
-			string formatFloat(const float &in myFloat, const string &in, const int &in, const int &in)
-			{
-				string f = ""+myFloat;
-				
-				// search if a point is present in the string
-				const string point = ".";
-				const uint8 point_ord = point[0];
-				bool point_present = false;
-				for(int i=f.length()-1; i>=0; --i)
-				{
-					if(f[i]==point_ord)
-					{
-						point_present = true;
-						break;
-					}
-				}
-				
-				// if no point is present, add it
-				if(point_present)
-					return f;
-				else
-					return f+".0";
-			}
-		""");
-		
 	}
 	
 	void destroy()
@@ -693,7 +563,7 @@ class gameScriptManager
 		sections[secID].cmd += cmd;
 	}
 	
-	void addObjectList(const string &in section_add, const string &in section_del, const string &in list, bool debug = false)
+	void addObjectList(const string &in section_add, const string &in section_del, const string &in list, bool debug = true)
 	{
 		uint secID_add = getSectionByName(section_add);
 		uint secID_del = getSectionByName(section_del);

@@ -1,5 +1,3 @@
-# Official RoRNet 2.38 Scripts
-
 Scripts used by the Official Rigs of Rods 0.4.8 servers, running RoRNet 2.41. 
 
 Original scripts by Neorej16.

@@ -8,4 +8,6 @@ Original scripts by Neorej16.
 `/rorserver/source/bin/resources`
 
 - Start your server with the following arguments:
-`-resource-dir /home/administrator/rorserver/source/bin/resources/ -script-file /home/administrator/rorserver/source/bin/resources/scripts/Main.as`
+`-resource-dir /home/user/rorserver/source/bin/resources/ -script-file /home/user/rorserver/source/bin/resources/scripts/Main.as`
+
+Make sure to change the paths depending on where your files are. 

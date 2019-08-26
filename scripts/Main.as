@@ -32,7 +32,7 @@ chatPlugin_autoModerator autoModerator(@chatSystem);
 //      Anonymous: OMG LOOK ATZ ME
 // to:
 //      Anonymous: Omg look atz me
-//chatPlugin_disallowAllUpperCase disallowAllUpperCase(@chatSystem);
+chatPlugin_disallowAllUpperCase disallowAllUpperCase(@chatSystem);
 
 // This plugin adds the following commands:
 //     - !afk           Prints "<username> is now away from keyboard."
@@ -58,7 +58,7 @@ chatPlugin_terrainList terrainList(@chatSystem, @gsm);
 
 // This checks the latency of all RoR 0.39 players every 20 seconds and responds
 // to !ping commands.
-//chatPlugin_ping ping(@chatSystem, @gsm);
+chatPlugin_ping ping(@chatSystem, @gsm);
 
 // Another example, to show how to add commands.
 // This adds a command !boost that gives a temporary boost to the truck of

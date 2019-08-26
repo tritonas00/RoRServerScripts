@@ -373,7 +373,7 @@ class chatPlugin_autoModerator_client
 }
 
 const uint PROFANITYFILTER_CHATBANTIME = 60;
-const uint PROFANITYFILTER_LogSIZE = 3;
+const uint PROFANITYFILTER_LOGSIZE = 3;
 
 class chatPlugin_autoModerator
 {
@@ -385,7 +385,7 @@ class chatPlugin_autoModerator
 	array<int> profanityFilterLog;
 	uint profanityFilterLogIndex;
 	
-	chatPlugin_autoModerator(chatManager@ _chtmngr, bool _enableProfanityFilter = false, bool _enableFloodFilter = true, bool _enableCommands = true)
+	chatPlugin_autoModerator(chatManager@ _chtmngr, bool _enableProfanityFilter = true, bool _enableFloodFilter = true, bool _enableCommands = true)
 	{
 		@chtmngr = @_chtmngr;
 		clients.resize(0);
@@ -396,8 +396,8 @@ class chatPlugin_autoModerator
 
 		// Initialize profanity filter
 		profanityFilterLogIndex = 0;
-		profanityFilterLog.resize(PROFANITYFILTER_LogSIZE);
-		for(uint i=0; i<PROFANITYFILTER_LogSIZE; ++i)
+		profanityFilterLog.resize(PROFANITYFILTER_LOGSIZE);
+		for(uint i=0; i<PROFANITYFILTER_LOGSIZE; ++i)
 		{
 			profanityFilterLog[i] = i-9999;
 		}
@@ -586,30 +586,31 @@ class chatPlugin_autoModerator
 			if(filterProfanity(cmsg.msg, newMsg))
 			{
 				// Check if the message contains any other characters than *
+				// commented for anti-link protection
 				bool blockMessage = true;
-				for(uint i=0; i<newMsg.length(); ++i)
-				{
-					if(newMsg[i]!=profanityFilter_replacementChar)
-					{
-						blockMessage = false;
-					}
-				}
+				//for(uint i=0; i<newMsg.length(); ++i)
+				//{
+				//	if(newMsg[i]!=profanityFilter_replacementChar)
+				//	{
+				//		blockMessage = false;
+				//	}
+				//}
 			
 				if(blockMessage)
 				{
 					cmsg.broadcast.block();
-					cmsg.privateGameCommand.message("Your message was censored by the server.", "lock_delete.png", 30000.0f, true);
+					cmsg.privateGameCommand.message("Your message contained a prohibited word. It was not broadcasted to other players!", "lock_delete.png", 30000.0f, true);
 					server.Log("CHAT_BLOCK| "+server.getUserName(cmsg.uid)+": "+newMsg);
 				}
 				else
 				{
 					// Set the new (censored) message.
-					cmsg.msg = newMsg;
-					server.Log("CHAT| "+server.getUserName(cmsg.uid)+": "+newMsg);
+				//	cmsg.msg = newMsg;
+				//	server.Log("CHAT| "+server.getUserName(cmsg.uid)+": "+newMsg);
 				
-					// Log this event
+					// log this event
 					profanityFilterLog[profanityFilterLogIndex] = cmsg.uid;
-					profanityFilterLogIndex = (profanityFilterLogIndex+1)%PROFANITYFILTER_LogSIZE;
+					profanityFilterLogIndex = (profanityFilterLogIndex+1)%PROFANITYFILTER_LOGSIZE;
 
 					// Time for a sanction against this user?
 					bool allBySameUser = true;
@@ -624,12 +625,12 @@ class chatPlugin_autoModerator
 					if(allBySameUser)
 					{	
 						// Give him a chat ban
-						cmsg.privateGameCommand += giveChatBan(cmsg.uid, PROFANITYFILTER_CHATBANTIME, "Auto-ban after " + PROFANITYFILTER_LogSIZE + " subsequent censored messages.");
+						cmsg.privateGameCommand += giveChatBan(cmsg.uid, PROFANITYFILTER_CHATBANTIME, "Auto-ban after " + PROFANITYFILTER_LOGSIZE + " subsequent censored messages.");
 						cmsg.generalGameCommand.message("User '"+server.getUserName(cmsg.uid)+"'s chat permission has been automatically revoked.", "server_error.png", 30000.0f, true);
 						
 						// reset variables
 						profanityFilterLogIndex = 0;
-						for(uint i=0; i<PROFANITYFILTER_LogSIZE; ++i)
+						for(uint i=0; i<PROFANITYFILTER_LOGSIZE; ++i)
 						{
 							profanityFilterLog[i] = i-9999;
 						}
@@ -1872,6 +1873,7 @@ class chatPlugin_terrainList
 				createTerrainList(@script);
 				script.flush();
 			}
+			quickGameMessage(TO_ALL, server.getUserName(clients[pos].uid) + " arrived in " + terrain + ".", "map.png");
 		}
 	}
 	
@@ -1930,7 +1932,7 @@ class chatPlugin_terrainList
 //////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////
 
-const uint PING_LogSIZE   = 15; //!< How many ping results that we store and calculate the average of.
+const uint PING_LOGSIZE   = 15; //!< How many ping results that we store and calculate the average of.
 const uint PING_FREQUENCY = 3; //!< How many times a minute do we ping clients?
 
 void chatPlugin_ping_cmdCallback(chatMessage@ ccmsg)
@@ -1963,7 +1965,7 @@ class chatPlugin_ping_client
 {
 	int uid;
 	
-	array<chatPlugin_ping_result@> Log;
+	array<chatPlugin_ping_result@> log;
 	uint index;
 }
 		
@@ -2048,7 +2050,7 @@ class chatPlugin_ping
 		chatPlugin_ping_client cl;
 		cl.uid = uid;
 		cl.index = 0;
-		cl.Log.resize(PING_LogSIZE);
+		cl.log.resize(PING_LOGSIZE);
 		clients.insertLast(@cl);
 		
 		if(!frameStepRegistered && clients.length()==1)
@@ -2123,10 +2125,10 @@ class chatPlugin_ping
 		
 		// Accumulate all the ping results that we have available for this user
 		array<float> pingList;
-		for(uint i=0; i<PING_LogSIZE; ++i)
+		for(uint i=0; i<PING_LOGSIZE; ++i)
 		{
-			if(clients[pos].Log[i] !is null)
-				pingList.insertLast(clients[pos].Log[i].ping);
+			if(clients[pos].log[i] !is null)
+				pingList.insertLast(clients[pos].log[i].ping);
 		}
 		pingList.sortAsc();
 		
@@ -2155,11 +2157,11 @@ class chatPlugin_ping
 		
 		// Get the index where we need to insert the ping into
 		clients[pos].index++;
-		if(clients[pos].index>=PING_LogSIZE)
+		if(clients[pos].index>=PING_LOGSIZE)
 			clients[pos].index = 0;
 		
 		// And add the ping
-		@clients[pos].Log[clients[pos].index] = @res;
+		@clients[pos].log[clients[pos].index] = @res;
 	}
 
 	float getPing(int uid)
@@ -2170,11 +2172,11 @@ class chatPlugin_ping
 		// Accumulate all the ping results that we have available for this user
 		float ping = 0.0f;
 		int pingCount = 0;
-		for(uint i=0; i<PING_LogSIZE; ++i)
+		for(uint i=0; i<PING_LOGSIZE; ++i)
 		{
-			if(clients[pos].Log[i] !is null)
+			if(clients[pos].log[i] !is null)
 			{
-				ping += clients[pos].Log[i].ping;
+				ping += clients[pos].log[i].ping;
 				++pingCount;
 			}
 		}

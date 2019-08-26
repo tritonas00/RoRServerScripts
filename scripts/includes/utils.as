@@ -10,7 +10,7 @@ const string COLOUR_BLUE     = "#0000FF";
 const string COLOUR_GREEN    = "#00FF00";
 const string COLOUR_MAGENTA  = "#FF00FF";
 const string COLOUR_COMMAND  = "#941e8d";
-const string COLOUR_NORMAL   = "#000000";
+const string COLOUR_NORMAL   = "#FFFFFF";
 const string COLOUR_WHISPER  = "#967417";
 const string COLOUR_SCRIPT   = "#32436f";
 

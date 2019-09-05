@@ -15,8 +15,8 @@ const array<string>  profanityFilter_words =
 	"nOob", "no0b", "asshole", "ass-hole", "assh0le", "gay", "you're gay",
 	"gay server", "phucking", "phuck", "sucker", "suck me off", "suck my nuts",
 	"suck my", "suck me", "server sucks", "fool", "dick" "d*ck", "d***", "fuk off", "fack you",
-	"nigga", "nig", "niggor", "nigger", "n*gger", "nigg*r", "n*gg*r", "penis", "gtfo",
-	"porn", "p0rn", "sex", "twat", "bitch", "dumbass", "wth", "douchebag", "douche", "shit", "queer",
+	"nigga", "nig", "niggor", "nigger", "n*gger", "nigg*r", "n*gg*r", "penis", "pussy", "gtfo",
+	"porn", "p0rn", "sex", "twat", "bitch", "b*tch", "faggot", "fag", "dumbass", "wth", "douchebag", "douche", "shit", "queer",
 	"w t f", "beamng", "beamng.drive", "https://", "http://", "http", ".com", ".net", ".org", "discord.gg", "bus company", "company", "thatguy"
 };
 

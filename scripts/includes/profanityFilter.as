@@ -17,7 +17,7 @@ const array<string>  profanityFilter_words =
 	"suck my", "suck me", "server sucks", "game sucks", "fool", "dick" "d*ck", "d***", "fuk off", "fack you",
 	"nigga", "nig", "niggor", "nigger", "n*gger", "nigg*r", "n*gg*r", "penis", "pussy", "gtfo",
 	"porn", "p0rn", "sex", "twat", "bitch", "b*tch", "faggot", "fag", "dumbass", "wth", "douchebag", "douche", "shit", "queer",
-	"w t f", "beamng", "beamng.drive", "https://", "http://", "http", ".com", ".net", ".org", "discord.gg", "bus company", "company", "thatguy"
+	"w t f", "beamng", "beamng.drive", "beam ng", "https://", "http://", "http", ".com", ".net", ".org", "discord.gg", "bus company", "company", "thatguy"
 };
 
 // The following words should only be replaced when found as full words

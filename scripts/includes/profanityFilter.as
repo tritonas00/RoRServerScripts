@@ -10,14 +10,14 @@ const array<string>  profanityFilter_words =
 {
 	"motherfucker", "mother fuck", "what the fuck", "fuck off", "fuck you",
 	"fucker", "fucking", "fucked", "fuck", "f*ck", "f**k", "fu**", "f***",
-	"fck", "wtf","cock", "fuking", "fukking", "cunt", "cocksucker",
-	"cock sucking", "cock sucker", "cock suck", "cock", "noob", "n00b",
-	"nOob", "no0b", "asshole", "ass-hole", "assh0le", "gay", "you're gay",
+	"fck", "wtf", "fuking", "fukking", "cunt", "cocksucker",
+	"cock sucking", "cock sucker", "cock suck", "noob", "n00b",
+	"nOob", "no0b", "asshole", "ass-hole", "assh0le", "you're gay",
 	"gay server", "phucking", "phuck", "sucker", "suck me off", "suck my nuts",
-	"suck my", "suck me", "server sucks", "game sucks", "fool", "dick" "d*ck", "d***", "fuk off", "fack you",
+	"suck my", "suck me", "server sucks", "game sucks", "fool", "fuk off", "fack you",
 	"nigga", "niggor", "nigger", "n*gger", "nigg*r", "n*gg*r", "penis", "pussy", "gtfo",
-	"porn", "p0rn", "sex", "twat", "bitch", "b*tch", "faggot", "fag", "dumbass", "wth", "douchebag", "douche", "shit", "queer",
-	"w t f", "beamng", "beamng.drive", "beam ng", "https://", "http://", "http", ".com", ".net", ".org", "discord.gg", "bus company", "company", "thatguy"
+	"porn", "p0rn", "sex", "twat", "bitch", "b*tch", "faggot", "fag", "gay", "dick", "d*ck", "d***", "dumbass", "douchebag", "douche", "shit", "queer",
+	"w t f", "beamng", "beamng.drive", "https://", "http://", "http", ".com", ".net", ".org", "discord.gg", "bus company", "company", "thatguy"
 };
 
 // The following words should only be replaced when found as full words
@@ -25,7 +25,7 @@ const array<string>  profanityFilter_words =
 // Notes:
 //     - do not use spaces in words here
 //     - These words are searched for case sensitive
-const array<string> profanityFilter_fullWords = { "tit", "tits", "ass", "fuk", "nig"};
+const array<string> profanityFilter_fullWords = { "tit", "tits", "ass", "fuk", "nig", "cock"};
 
 // the character by which the words need to be replaced
 const uint8 profanityFilter_replacementChar = ord('*');

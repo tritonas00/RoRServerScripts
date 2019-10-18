@@ -9,10 +9,10 @@
 const array<string>  profanityFilter_words = 
 {
 	"motherfucker", "mother fuck", "what the fuck", "fuck off", "fuck you",
-	"fucker", "fucking", "fucked", "fuck", "f*ck", "f**k", "fu**", "f***",
+	"fucker", "fucking", "fucked", "fuck", "f*ck", "fu*k", "f**k", "fu**", "f***",
 	"fck", "wtf", "fuking", "fukking", "cunt", "cocksucker",
 	"cock sucking", "cock sucker", "cock suck", "noob", "n00b",
-	"nOob", "no0b", "asshole", "ass-hole", "assh0le", "you're gay",
+	"nOob", "no0b", "jackass", "asshole", "ass-hole", "assh0le", "you're gay",
 	"gay server", "phucking", "phuck", "sucker", "suck me off", "suck my nuts",
 	"suck my", "suck me", "server sucks", "game sucks", "fool", "fuk off", "fack you",
 	"nigga", "niggor", "nigger", "n*gger", "nigg*r", "n*gg*r", "penis", "pussy", "gtfo",

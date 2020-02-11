@@ -1873,7 +1873,7 @@ class chatPlugin_terrainList
 				createTerrainList(@script);
 				script.flush();
 			}
-			quickGameMessage(TO_ALL, server.getUserName(clients[pos].uid) + " arrived in " + terrain + ".", "map.png");
+			//quickGameMessage(TO_ALL, server.getUserName(clients[pos].uid) + " arrived in " + terrain + ".", "map.png");
 		}
 	}
 	

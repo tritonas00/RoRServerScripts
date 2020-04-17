@@ -1,4 +1,4 @@
-Scripts used by the Official Rigs of Rods 0.4.8 servers, running RoRNet 2.41. 
+Scripts used by the Official Rigs of Rods servers.
 
 Original scripts by Neorej16.
 

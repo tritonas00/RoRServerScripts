@@ -33,7 +33,7 @@ chatPlugin_autoModerator autoModerator(@chatSystem);
 //      Anonymous: OMG LOOK ATZ ME
 // to:
 //      Anonymous: Omg look atz me
-chatPlugin_disallowAllUpperCase disallowAllUpperCase(@chatSystem);
+//chatPlugin_disallowAllUpperCase disallowAllUpperCase(@chatSystem);
 
 // This plugin adds the following commands:
 //     - !afk           Prints "<username> is now away from keyboard."
